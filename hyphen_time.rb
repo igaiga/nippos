@@ -1,8 +1,7 @@
 require 'active_support/all'
 require 'awesome_print'
-require 'pry'
 
-# HyphenTime データ構造
+# HyphenTime データフォーマット
 # data: ["8:00-9:00", "10:00-13:00", ...]
 # sum: X:XX
 class HyphenTime
@@ -10,11 +9,13 @@ class HyphenTime
 
   def initialize(arg)
     @data = []
-    parse(arg)
+    store(arg)
+    self
   end
 
   def add(arg)
-    parse(arg)
+    store(arg)
+    self
   end
 
   def sum
@@ -30,11 +31,13 @@ class HyphenTime
 
   private
 
+  # in " 9 : 00 - 10 : 00 ", out: "9:00-10:00"
   def treat(string)
     string.gsub(/\s+/, '')
   end
 
-  def parse(arg)
+  # in: "9:00-10:00" or ["9:00-10:00", ...]
+  def store(arg)
     case
     when arg.respond_to?(:each)
         arg.each{ |x| @data << treat(x) }
@@ -43,24 +46,25 @@ class HyphenTime
     end
   end
 
+  # in: "3:20", out: 200
   def to_min(string)
-    h,m = string.split(':')
+    h, m = string.split(':')
     h.to_i * 60 + m.to_i
   end
 
+  # in: "240", out: "4:00"
   def to_hyphen(arg)
-    hh = arg.to_i / 60
-    mm = arg.to_i % 60 # TODO: 0 fill
-    "#{hh}:#{mm}"
+    h = arg.to_i / 60
+    m = arg.to_i % 60
+    "#{h}:#{format("%02d", m)}"
   end
 
 end
 
-h = HyphenTime.new("8:00-9:00")
-h.add(["10:00-13:00", "14:00-19:00"])
-p h.sum
-
-
+# sample
+ht = HyphenTime.new("8:00-9:00")
+ht.add(["10:00-13:00", "14:00-19:00"])
+p ht.sum
 
 # str_reloaded = File.open("nippo_body", "r") do |f|
 #   Marshal.restore(f.read)
