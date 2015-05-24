@@ -1,5 +1,4 @@
 require 'active_support/all'
-require 'awesome_print'
 
 # HyphenTime データフォーマット
 # data: ["8:00-9:00", "10:00-13:00", ...]
@@ -7,7 +6,7 @@ require 'awesome_print'
 class HyphenTime
   attr_reader :data
 
-  def initialize(arg)
+  def initialize(arg = nil)
     @data = []
     store(arg)
     self
@@ -29,6 +28,11 @@ class HyphenTime
     }.sum
   end
 
+  def adapt_string?(arg)
+    return false unless arg
+    !!(arg =~ /\d+:\d+-\d+:\d+/)
+  end
+
   private
 
   # in " 9 : 00 - 10 : 00 ", out: "9:00-10:00"
@@ -38,6 +42,8 @@ class HyphenTime
 
   # in: "9:00-10:00" or ["9:00-10:00", ...]
   def store(arg)
+    return unless arg
+    return unless adapt_string?(arg)
     case
     when arg.respond_to?(:each)
         arg.each{ |x| @data << treat(x) }
@@ -61,12 +67,7 @@ class HyphenTime
 
 end
 
-# sample
-ht = HyphenTime.new("8:00-9:00")
-ht.add(["10:00-13:00", "14:00-19:00"])
-p ht.sum
-
-# str_reloaded = File.open("nippo_body", "r") do |f|
-#   Marshal.restore(f.read)
-# end
-# p str_reloaded
+# # sample
+# ht = HyphenTime.new("8:00-9:00")
+# ht.add(["10:00-13:00", "14:00-19:00"])
+# p ht.sum
