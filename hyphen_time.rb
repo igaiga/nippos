@@ -33,6 +33,27 @@ class HyphenTime
     !!(arg =~ /\d+:\d+-\d+:\d+/)
   end
 
+  # TODO "8:00" が HyphenTime で、"8:00-9:00" はHyphenTimeRange とかになるべき。
+  # in: "8:00", out: 400
+  def self.to_min(string)
+    h, m = string.split(':')
+    h.to_i * 60 + m.to_i
+  end
+  # in: "240", out: "4:00"
+  def self.to_hyphen(arg)
+    h = arg.to_i / 60
+    m = arg.to_i % 60
+    "#{h}:#{format("%02d", m)}"
+  end
+  # in: ["8:00", "9:00"], out: 1020
+  def self.hyphen_time_sum_minutes(array)
+    array.map{ |x| to_min(x) }.sum
+  end
+  # in: ["8:00", "9:00"], out: "17:00"
+  def self.hyphen_time_sum(array)
+    to_hyphen(hyphen_time_sum_minutes(array))
+  end
+
   private
 
   # in " 9 : 00 - 10 : 00 ", out: "9:00-10:00"
@@ -52,17 +73,12 @@ class HyphenTime
     end
   end
 
-  # in: "3:20", out: 200
   def to_min(string)
-    h, m = string.split(':')
-    h.to_i * 60 + m.to_i
+    self.class.to_min(string)
   end
 
-  # in: "240", out: "4:00"
   def to_hyphen(arg)
-    h = arg.to_i / 60
-    m = arg.to_i % 60
-    "#{h}:#{format("%02d", m)}"
+    self.class.to_hyphen(arg)
   end
 
 end
