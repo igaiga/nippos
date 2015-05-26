@@ -3,14 +3,13 @@ require "awesome_print"
 require_relative "hyphen_time"
 require_relative "daily_report"
 
-#TODO: 複数日報収集(クラス名命名)
 class MonthlyReport
   attr_reader :data
 
   # @data : DailyReport が入った配列
-  def initialize(arg = nil)
+  def initialize(daily_report = nil)
     @data = []
-    store(arg)
+    store(daily_report)
     self
   end
 
@@ -29,17 +28,19 @@ class MonthlyReport
     return unless arg
     case
     when arg.respond_to?(:each)
-      arg.each{ |x| @data << DailyReport.new(x) }
+      arg.each{ |x| @data << x }
     else
-      @data << DailyReport.new(arg)
+      @data << arg
     end
   end
 
 end
+
 # テストデータ(実際の日報body_md)1日分で計算する
 str_reloaded = File.open("nippo_body", "r") do |f|
   Marshal.restore(f.read)
 end
-mr = MonthlyReport.new(str_reloaded)
-mr.add(str_reloaded)
+
+mr = MonthlyReport.new(DailyReport.new(date: Date.today, body: str_reloaded))
+mr.add(DailyReport.new(date: Date.today, body: str_reloaded))
 p mr.collect_working_time

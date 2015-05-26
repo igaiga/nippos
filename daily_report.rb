@@ -1,6 +1,8 @@
 class DailyReport
-  def initialize(body_string)
-    @data = body_string
+  attr_accessor :date, :body
+  def initialize(date: nil, body: nil)
+    @date = date
+    @body = body
     self
   end
   def collect_working_time
@@ -15,7 +17,7 @@ class DailyReport
 
   def working_time_area_string
     # //m は . を複数行マッチさせるモード
-    "#{ @data.match(/#\s+勤務時間(.*?)#\s+/m){ |matched| matched[1] } }"
+    "#{ @body.match(/#\s+勤務時間(.*?)#\s+/m){ |matched| matched[1] } }"
   end
 
   def extract_working_time(string)
@@ -24,4 +26,4 @@ class DailyReport
   end
 end
 
-# p DailyReport.new(daily_report_body_string).collect_working_time
+# p DailyReport.new(body: daily_report_body_string).collect_working_time
