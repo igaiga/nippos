@@ -5,12 +5,20 @@ class DailyReport
     @body = body
     self
   end
-  def collect_working_time
+
+  def working_times
+    result = []
     hyphen_time = HyphenTime.new
     working_time_area_string.each_line do |line|
-      hyphen_time.add(extract_working_time(line))
+      ht =  HyphenTime.new(extract_working_time(line))
+      result << ht if ht.valid?
+#      hyphen_time.add(extract_working_time(line)) #旧コード
     end
-    hyphen_time.sum
+    result
+  end
+
+  def working_times_sum
+    HyphenTime.to_hyphen(working_times.map(&:sum_min).sum)
   end
 
   private

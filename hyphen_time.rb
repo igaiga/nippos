@@ -1,8 +1,11 @@
 require 'active_support/all'
 
+# TODO: HyphenTime自身は単数にして、複数用に+ メソッドを用意
+# TODO: "8:00" が HyphenTime で、"8:00-9:00" はHyphenTimeRange とかの方がいいかなー？
+
 # HyphenTime データフォーマット
-# data: ["8:00-9:00", "10:00-13:00", ...]
-# sum: X:XX
+# data: ["8:00-9:00", "10:00-13:00", ...] # 単数にしたい
+# sum: X:XX #なくしたい
 class HyphenTime
   attr_reader :data
 
@@ -30,10 +33,9 @@ class HyphenTime
 
   def adapt_string?(arg)
     return false unless arg
-    !!(arg =~ /\d+:\d+-\d+:\d+/)
+    !!(treat(arg) =~ /\d+:\d+-\d+:\d+/)
   end
 
-  # TODO "8:00" が HyphenTime で、"8:00-9:00" はHyphenTimeRange とかになるべき。
   # in: "8:00", out: 400
   def self.to_min(string)
     h, m = string.split(':')
@@ -45,13 +47,20 @@ class HyphenTime
     m = arg.to_i % 60
     "#{h}:#{format("%02d", m)}"
   end
+
   # in: ["8:00", "9:00"], out: 1020
   def self.hyphen_time_sum_minutes(array)
     array.map{ |x| to_min(x) }.sum
   end
+
   # in: ["8:00", "9:00"], out: "17:00"
   def self.hyphen_time_sum(array)
     to_hyphen(hyphen_time_sum_minutes(array))
+  end
+
+  def valid?
+    return false if @data.blank?
+    @data.all?{ |x| adapt_string?(x) }
   end
 
   private
