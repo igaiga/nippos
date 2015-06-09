@@ -1,8 +1,9 @@
 class DailyReport
-  attr_accessor :date, :body
-  def initialize(date: nil, body: nil)
+  attr_accessor :date, :body, :name
+  def initialize(date: nil, body: nil, name: nil)
     @date = date
     @body = body
+    @name = name
     self
   end
 

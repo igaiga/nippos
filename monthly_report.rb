@@ -2,15 +2,14 @@ class MonthlyReport
   attr_reader :data
 
   # @data : DailyReport が入った配列
-  # TODO: 引数に日報配列を渡せるように（そんなに要らない？）
-  def initialize(daily_report = nil)
+  def initialize(daily_reports = nil)
     @data = []
-    store(daily_report)
+    store(daily_reports)
     self
   end
 
-  def add(arg)
-    store(arg)
+  def add(daily_reports)
+    store(daily_reports)
     self
   end
 
