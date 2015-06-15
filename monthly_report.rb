@@ -20,6 +20,7 @@ class MonthlyReport
   end
 
   def total_md
+    puts "#勤務時間集計"
     puts "| 日付 | 時間 | 日合計 |"
     puts "| --- | --- | --- |"
 

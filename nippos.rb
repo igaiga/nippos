@@ -18,7 +18,7 @@ client = Esa::Client.new(access_token: ENV["ACCESS_TOKEN"],
                          current_team: 'spicelife')
 
 year = 2015
-month = 5
+month = 6
 name = '五十嵐邦明'
 
 esa_posts = client.posts(q: "in:/日報/#{year}/#{'%02d' % month}/ name:#{name}", per_page: 100)
