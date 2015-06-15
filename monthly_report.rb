@@ -1,9 +1,11 @@
 class MonthlyReport
-  attr_reader :data
+  attr_reader :data, :year, :month
 
   # @data : DailyReport が入った配列
-  def initialize(daily_reports = nil)
+  def initialize(year: , month: , daily_reports: nil)
     @data = []
+    @year = year
+    @month = month
     store(daily_reports)
     self
   end
@@ -15,6 +17,28 @@ class MonthlyReport
 
   def working_times_sum
     HyphenTime.hyphen_time_sum(@data.map(&:working_times_sum))
+  end
+
+  def total_md
+    puts "| 日付 | 時間 | 日合計 |"
+    puts "| --- | --- | --- |"
+
+    (first_day..last_day).each do |date|
+      daily_report = find(date)
+      if daily_report
+        puts "|#{date_string(date)}| #{daily_report.working_times.map(&:data).join ', '} | #{daily_report.working_times_sum} | "
+      else
+        puts "|#{date_string(date)}| | |"
+      end
+      #TODO: 週ごとの勤務時間
+    end
+
+    puts "| 月合計 | | #{working_times_sum} |"
+
+  end
+
+  def find(date)
+    @data.select{|x| x.date == "#{@year}/#{'%02d' % @month}/#{'%02d' % date.day}" }.first
   end
 
   private
@@ -29,6 +53,17 @@ class MonthlyReport
     end
   end
 
+  def first_day
+    Date.new(@year, @month, 1).beginning_of_month
+  end
+
+  def last_day
+    first_day.end_of_month
+  end
+
+  def date_string(date)
+    "#{date.strftime('%Y/%m/%d')}(#{%w(日 月 火 水 木 金 土)[date.wday]})"
+  end
 end
 
 # テストデータ(実際の日報body_md)1日分で計算するテストコード
