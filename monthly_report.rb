@@ -20,28 +20,30 @@ class MonthlyReport
   end
 
   def total_md
-    puts "#勤務時間集計"
-    puts "| 日付 | 時間 | 日合計 |"
-    puts "| --- | --- | --- |"
+    result_lines = []
+    result_lines << "#勤務時間集計"
+    result_lines << "| 日付 | 時間 | 日合計 |"
+    result_lines << "| --- | --- | --- |"
     weekly_working_min = 0 #週次集計
 
     (first_day..last_day).each do |date|
       daily_report = find(date)
       if daily_report
-        puts "|#{date_string(date)}| #{daily_report.working_times.map(&:data).join ', '} | #{daily_report.working_times_sum} | "
+        result_lines << "|#{date_string(date)}| #{daily_report.working_times.map(&:data).join ', '} | #{daily_report.working_times_sum} | "
         weekly_working_min += HyphenTime.to_min(daily_report.working_times_sum)
       else
-        puts "|#{date_string(date)}| | |"
+        result_lines << "|#{date_string(date)}| | |"
       end
 
       if date.saturday? #週次集計
-        puts "| |週合計| #{HyphenTime.to_hyphen(weekly_working_min)} |"
+        result_lines << "| |週合計| #{HyphenTime.to_hyphen(weekly_working_min)} |"
         weekly_working_min = 0
       end
     end
 
-    puts "| 月合計 | | #{working_times_sum} |"
+    result_lines << "| 月合計 | | #{working_times_sum} |"
 
+    result_lines.join "\n"
   end
 
   def find(date)
