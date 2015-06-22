@@ -33,16 +33,46 @@ class Nippo
     monthly_report.total_md
   end
 
-  # TODO: 集計結果を集計ページへAPIで投稿
+  # TODO: 投稿するデータを渡す
+  # TODO: categoryはinitへ移動。nameどうするかだな。
+  # TODO: run 的なメソッド作って全体を流れるようにする
+  def upload
+    params = {
+        name:     "test",
+        category: "日報/2015/06/集計",
+        body_md:  "waiwai",
+        wip:      true,
+        message:  'Updated by nippos',
+    }
+    id = post_number(category: "日報/2015/06/集計", name: "test")
+    if id
+      @client.update_post(id, params)
+    else
+      @client.create_post(params)
+    end
+  end
 
-end
-
-names = ['五十嵐邦明']
-
-names.each do |name|
-  report = Nippo.new.collect(name: name, year: 2015, month: 6)
-  ap "#{name}: #{report}"
-  File.open("report_#{name}.txt", 'w') do |f|
-    f.puts report
+  def post_number(category: ,name:)
+    posts = @client.posts(q: "in:#{category} name:#{name}")
+    if posts.body["total_count"] > 0
+      posts.body["posts"].first["number"]
+    else
+      nil
+    end
   end
 end
+
+# テスト中
+Nippo.new.upload
+# 
+
+### main
+### テスト用にコメントアウト 
+# names = ['五十嵐邦明']
+# names.each do |name|
+#   report = Nippo.new.collect(name: name, year: 2015, month: 6)
+#   ap "#{name}: #{report}"
+#   File.open("report_#{name}.txt", 'w') do |f|
+#     f.puts report
+#   end
+# end
