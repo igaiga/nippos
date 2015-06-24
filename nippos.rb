@@ -20,31 +20,47 @@ class Nippo
     self
   end
 
-  def collect(name: , year: , month: )
-    esa_posts = @client.posts(q: "in:/日報/#{year}/#{'%02d' % month}/ name:#{name}", per_page: 100)
+  # for debug
+  # File.open("report_#{name}.txt", 'w') do |f|
+  #   f.puts report
+  # end
 
+  def run
+    year = 2015
+    month = 6
+    names = ['五十嵐邦明']
+    names.each do |name|
+      collect_and_upload(name: name, year: year, month: month)
+    end
+
+  end
+
+  def collect_and_upload(name: , year: , month: )
+    md = collect(name: name, year: year, month: month)
+    ap md
+    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
+  end
+
+  def collect(name: , year: , month: )
+    esa_posts = @client.posts(q: "in:#{category_string(year: year, month: month)} name:#{name}", per_page: 100)
+ap "in:#{category_string(year: year, month: month)} name:#{name}" 
     monthly_report = MonthlyReport.new(year: year, month: month)
     esa_posts.body["posts"].map do |post|
       monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"]))
     end
 
-    #ap monthly_report.data.map(&:date) #月の日報が書かれている日
-    #ap monthly_report.working_times_sum #月合計勤務時間
     monthly_report.total_md
   end
 
-  # TODO: 投稿するデータを渡す
-  # TODO: categoryはinitへ移動。nameどうするかだな。
-  # TODO: run 的なメソッド作って全体を流れるようにする
-  def upload
+  def upload(name:, body_md:, category: )
     params = {
-        name:     "test",
-        category: "日報/2015/06/集計",
-        body_md:  "waiwai",
+        name:     name,
+        category: category,
+        body_md:  body_md,
         wip:      true,
         message:  'Updated by nippos',
     }
-    id = post_number(category: "日報/2015/06/集計", name: "test")
+    id = post_number(category: category, name: name)
     if id
       @client.update_post(id, params)
     else
@@ -60,19 +76,13 @@ class Nippo
       nil
     end
   end
+
+  private
+
+  def category_string(year:, month:)
+    "/日報/#{year}/#{'%02d' % month}/"
+  end
 end
 
-# テスト中
-Nippo.new.upload
-# 
-
-### main
-### テスト用にコメントアウト 
-# names = ['五十嵐邦明']
-# names.each do |name|
-#   report = Nippo.new.collect(name: name, year: 2015, month: 6)
-#   ap "#{name}: #{report}"
-#   File.open("report_#{name}.txt", 'w') do |f|
-#     f.puts report
-#   end
-# end
+# main
+Nippo.new.run
