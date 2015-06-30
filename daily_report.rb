@@ -1,7 +1,8 @@
 class DailyReport
   attr_accessor :date, :body, :name
   def initialize(date: nil, body: nil, name: nil)
-    @date = date.gsub(/\A日報\//, '')
+    # 例: "日報/2015/07/01/水" → "2015/07/01"
+    @date = date.split(/\//)[1..3].join('/')
     @body = body
     @name = name
     self
