@@ -30,15 +30,15 @@ class Nippo
     month = 8
     names = ['五十嵐邦明']
     names.each do |name|
-      collect_and_upload(name: name, year: year, month: month)
+      response = collect_and_upload(name: name, year: year, month: month)
+      puts response.body["url"]
     end
-
   end
 
   def collect_and_upload(name: , year: , month: )
     md = collect(name: name, year: year, month: month)
     ap md
-    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
+    response = upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
   end
 
   def collect(name: , year: , month: )
@@ -61,11 +61,12 @@ ap "in:#{category_string(year: year, month: month)} name:#{name}"
         message:  'Updated by nippos',
     }
     id = post_number(category: category, name: name)
-    if id
+    response = if id
       @client.update_post(id, params)
     else
       @client.create_post(params)
     end
+    response
   end
 
   def post_number(category: ,name:)
