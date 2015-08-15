@@ -46,7 +46,7 @@ class Nippo
 ap "in:#{category_string(year: year, month: month)} name:#{name}" 
     monthly_report = MonthlyReport.new(year: year, month: month)
     esa_posts.body["posts"].map do |post|
-      monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"]))
+      monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"], url: post["url"]))
     end
 
     monthly_report.total_md

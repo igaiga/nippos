@@ -29,7 +29,7 @@ class MonthlyReport
     (first_day..last_day).each do |date|
       daily_report = find(date)
       if daily_report
-        result_lines << "|#{date_string(date)}| #{daily_report.working_times.map(&:data).join ', '} | #{daily_report.working_times_sum} | "
+        result_lines << "|[#{date_string(date)}](#{daily_report.url})| #{daily_report.working_times.map(&:data).join ', '} | #{daily_report.working_times_sum} | "
         weekly_working_min += HyphenTime.to_min(daily_report.working_times_sum)
       else
         result_lines << "|#{date_string(date)}| | |"
