@@ -1,5 +1,6 @@
 class MonthlyReport
   attr_reader :data, :year, :month
+  attr_accessor :url
 
   # @data : DailyReport が入った配列
   def initialize(year: , month: , daily_reports: nil)

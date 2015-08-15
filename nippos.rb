@@ -30,26 +30,26 @@ class Nippo
     month = 8
     names = ['五十嵐邦明']
     names.each do |name|
-      response = collect_and_upload(name: name, year: year, month: month)
-      puts response.body["url"]
+      collect_and_upload(name: name, year: year, month: month)
+      puts @monthly_report.url
     end
   end
 
   def collect_and_upload(name: , year: , month: )
     md = collect(name: name, year: year, month: month)
     ap md
-    response = upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
+    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
   end
 
   def collect(name: , year: , month: )
     esa_posts = @client.posts(q: "in:#{category_string(year: year, month: month)} name:#{name}", per_page: 100)
 ap "in:#{category_string(year: year, month: month)} name:#{name}" 
-    monthly_report = MonthlyReport.new(year: year, month: month)
+    @monthly_report = MonthlyReport.new(year: year, month: month)
     esa_posts.body["posts"].map do |post|
-      monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"], url: post["url"]))
+      @monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"], url: post["url"]))
     end
 
-    monthly_report.total_md
+    @monthly_report.total_md
   end
 
   def upload(name:, body_md:, category: )
@@ -66,7 +66,7 @@ ap "in:#{category_string(year: year, month: month)} name:#{name}"
     else
       @client.create_post(params)
     end
-    response
+    @monthly_report.url = response.body["url"]
   end
 
   def post_number(category: ,name:)
