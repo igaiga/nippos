@@ -27,7 +27,7 @@ class Nippo
 
   def run
     year = 2015
-    month = 6
+    month = 8
     names = ['五十嵐邦明']
     names.each do |name|
       collect_and_upload(name: name, year: year, month: month)
