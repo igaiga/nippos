@@ -35,7 +35,7 @@ class MonthlyReport
         result_lines << "|#{date_string(date)}| | |"
       end
 
-      if date.saturday? #週次集計
+      if date.saturday? || (date == date.end_of_month) #週次集計
         result_lines << "| |週合計| #{HyphenTime.to_hyphen(weekly_working_min)} |"
         weekly_working_min = 0
       end
