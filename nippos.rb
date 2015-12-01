@@ -5,7 +5,8 @@ require "awesome_print"
 require_relative "daily_report"
 require_relative "monthly_report"
 require_relative "hyphen_time"
-require "pry"
+
+# require "pry"
 
 # TODO: Gemfile
 # TODO: トークンを設定ファイルへ
