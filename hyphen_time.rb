@@ -34,7 +34,6 @@ class HyphenTime
   def in_range(range_hyphen_time)
     range_from = range_hyphen_time.from
     range_to = range_hyphen_time.to
-#    require 'pry'; binding.pry
     ranged_data_from = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.from), HyphenTime.to_min(from)].max)
     ranged_data_to   = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.to)  , HyphenTime.to_min(to)].min)
     self.class.new("#{ranged_data_from}-#{ranged_data_to}")
