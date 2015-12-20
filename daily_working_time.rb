@@ -14,6 +14,11 @@ class DailyWorkingTime
     HyphenTime.to_hyphen(@data.map(&:sum_min).sum)
   end
 
+  def midnight_sum
+    midnight = HyphenTime.new("22:00-29:00")
+    HyphenTime.to_hyphen(@data.map{|x| x.in_range(midnight).sum_min }.sum)
+  end
+
   def to_hyphen
     @data.map(&:data)
   end

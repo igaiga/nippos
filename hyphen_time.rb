@@ -13,15 +13,31 @@ class HyphenTime
     self
   end
 
+  def from
+    @data.split(/-/)[0]
+  end
+
+  def to
+    @data.split(/-/)[1]
+  end
+
   def add(arg)
     store(arg)
     self
   end
 
   def sum_min
-    hyphen_string = @data
-    from, to = hyphen_string.split(/-/)
+    from, to = @data.split(/-/)
     to_min(to) - to_min(from) 
+  end
+
+  def in_range(range_hyphen_time)
+    range_from = range_hyphen_time.from
+    range_to = range_hyphen_time.to
+#    require 'pry'; binding.pry
+    ranged_data_from = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.from), HyphenTime.to_min(from)].max)
+    ranged_data_to   = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.to)  , HyphenTime.to_min(to)].min)
+    self.class.new("#{ranged_data_from}-#{ranged_data_to}")
   end
 
   def adapt_string?(arg)

@@ -38,6 +38,17 @@ describe "DailyWorkingTime" do
     end
   end
 
+  describe "#midnight_sum" do
+    # 22:00-29:00(=AM5:00) が対象
+    subject {
+      DailyWorkingTime.new(
+        HyphenTime.new('20:00-23:30'),
+        HyphenTime.new('24:00-25:00'),
+        HyphenTime.new('28:00-30:00')
+      ).midnight_sum }
+    it { is_expected.to eq '3:30' }
+  end
+
   describe "#to_hyphen" do
     subject {
       DailyWorkingTime.new(
