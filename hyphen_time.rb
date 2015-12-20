@@ -1,16 +1,14 @@
 require 'active_support/all'
 
-# TODO: HyphenTime自身は単数にして、複数用に+ メソッドを用意
-# TODO: "8:00" が HyphenTime で、"8:00-9:00" はHyphenTimeRange とかの方がいいかなー？
+# TODO: "8:00" が HyphenTime で、"8:00-9:00" はHyphenTimeRange とかの方がいい？
 
 # HyphenTime データフォーマット
-# data: ["8:00-9:00", "10:00-13:00", ...] # 単数にしたい
-# sum: X:XX #なくしたい
+# data: "8:00-9:00"
 class HyphenTime
   attr_reader :data
 
   def initialize(arg = nil)
-    @data = []
+    @data = nil
     store(arg)
     self
   end
@@ -20,15 +18,10 @@ class HyphenTime
     self
   end
 
-  def sum
-    to_hyphen(sum_min)
-  end
-
   def sum_min
-    data.map { |hyphen_string|
-      from, to = hyphen_string.split(/-/)
-      to_min(to) - to_min(from) 
-    }.sum
+    hyphen_string = @data
+    from, to = hyphen_string.split(/-/)
+    to_min(to) - to_min(from) 
   end
 
   def adapt_string?(arg)
@@ -59,8 +52,7 @@ class HyphenTime
   end
 
   def valid?
-    return false if @data.blank?
-    @data.all?{ |x| adapt_string?(x) }
+    adapt_string?(@data)
   end
 
   private
@@ -70,16 +62,11 @@ class HyphenTime
     string.gsub(/\s+/, '')
   end
 
-  # in: "9:00-10:00" or ["9:00-10:00", ...]
+  # in: "9:00-10:00"
   def store(arg)
     return unless arg
     return unless adapt_string?(arg)
-    case
-    when arg.respond_to?(:each)
-        arg.each{ |x| @data << treat(x) }
-    else
-      @data << treat(arg)
-    end
+    @data = treat(arg)
   end
 
   def to_min(string)
