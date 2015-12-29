@@ -15,6 +15,10 @@ class DailyReport
     @daily_working_time.sum
   end
 
+  def midnight_working_times_sum
+    @daily_working_time.midnight_sum
+  end
+
   private
 
   def working_times

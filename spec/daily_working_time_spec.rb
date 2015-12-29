@@ -40,7 +40,7 @@ describe "DailyWorkingTime" do
 
   describe "#midnight_sum" do
     context "深夜勤務があるとき" do
-      # 22:00-29:00(=AM5:00) が対象
+      # 0:00-5:00, 22:00-29:00(=AM5:00) が対象
       subject {
         DailyWorkingTime.new(
           HyphenTime.new('16:00-19:00'),
@@ -49,6 +49,16 @@ describe "DailyWorkingTime" do
           HyphenTime.new('28:00-30:00')
         ).midnight_sum }
       it { is_expected.to eq '3:30' }
+    end
+    context "複数範囲の深夜勤務があるとき" do
+      # 0:00-5:00, 22:00-29:00(=AM5:00) が対象
+      subject {
+        DailyWorkingTime.new(
+          HyphenTime.new('0:30-2:00'),
+          HyphenTime.new('16:00-19:00'),
+          HyphenTime.new('24:00-25:00'),
+        ).midnight_sum }
+      it { is_expected.to eq '2:30' }
     end
     context "深夜勤務がないとき" do
       subject {
