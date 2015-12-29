@@ -27,7 +27,7 @@ class MonthlyReport
   def total_md
     result_lines = []
     result_lines << "#勤務時間集計"
-    result_lines << "| 日付 | 時間 | 日合計 | 深夜時間合計 |"
+    result_lines << "| 日付 | 時間 | 日合計 | 深夜合計 |"
     result_lines << "| --- | --- | --- | --- |"
     #週次集計
     weekly_working_min = 0
