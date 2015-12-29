@@ -10,7 +10,7 @@ GEM
     awesome_print (1.6.1)
     coderay (1.1.0)
     diff-lcs (1.2.5)
-    esa (1.1.2)
+    esa (1.2.0)
       faraday (~> 0.9)
       faraday_middleware
       mime-types (~> 2.6)
@@ -59,4 +59,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
