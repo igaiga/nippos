@@ -83,12 +83,3 @@ class MonthlyReport
     "#{date.strftime('%Y/%m/%d')}(#{%w(日 月 火 水 木 金 土)[date.wday]})"
   end
 end
-
-# テストデータ(実際の日報body_md)1日分で計算するテストコード
-#str_reloaded = File.open("nippo_body", "r") do |f|
-#  Marshal.restore(f.read)
-#end
-# mr = MonthlyReport.new(DailyReport.new(date: Date.today, body: str_reloaded))
-# mr.add(DailyReport.new(date: Date.today, body: str_reloaded))
-# p mr.collect_working_time
-
