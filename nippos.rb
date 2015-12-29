@@ -28,7 +28,7 @@ class Nippo
 
   def run
     year = 2015
-    month = 8
+    month = 11
     names = ['五十嵐邦明']
     names.each do |name|
       collect_and_upload(name: name, year: year, month: month)
@@ -38,8 +38,11 @@ class Nippo
 
   def collect_and_upload(name: , year: , month: )
     md = collect(name: name, year: year, month: month)
+    File.open("work/#{name}_#{year}_#{month}_new.txt", "w") do |f|
+      f.puts md
+    end
     ap md
-    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
+#    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
   end
 
   def collect(name: , year: , month: )
