@@ -36,7 +36,9 @@ class HyphenTime
     range_to = range_hyphen_time.to
     ranged_data_from = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.from), HyphenTime.to_min(from)].max)
     ranged_data_to   = self.class.to_hyphen([HyphenTime.to_min(range_hyphen_time.to)  , HyphenTime.to_min(to)].min)
-    self.class.new("#{ranged_data_from}-#{ranged_data_to}")
+    result = self.class.new("#{ranged_data_from}-#{ranged_data_to}")
+    result = self.class.new("0:00-0:00") if result.sum_min <= 0 # 範囲内なし
+    result
   end
 
   def adapt_string?(arg)
