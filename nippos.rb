@@ -28,8 +28,9 @@ class Nippo
 
   def run
     year = 2015
-    month = 8
-    names = ['五十嵐邦明']
+    month = 10
+#    names = ['南谷祐貴']
+    names = ['五十嵐邦明', '桐山裕平', '栗原勇樹', '西田牧子', '赤松祐希', '中村勇介', '堀邦明', 'Chihiro Ito', 'Yuya Fujiwara', '南谷祐貴', '下山浩靖', 'Takahiro Kinugawa', 'Daisuke Washizu', 'haneal jeon', '宮下洋軌']
     names.each do |name|
       collect_and_upload(name: name, year: year, month: month)
       puts @monthly_report.url
@@ -39,13 +40,14 @@ class Nippo
   def collect_and_upload(name: , year: , month: )
     md = collect(name: name, year: year, month: month)
     ap md
-    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
+    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "深夜勤務集計/" )
   end
 
   def collect(name: , year: , month: )
     esa_posts = @client.posts(q: "in:#{category_string(year: year, month: month)} name:#{name}", per_page: 100)
     ap "in:#{category_string(year: year, month: month)} name:#{name}"
     @monthly_report = MonthlyReport.new(year: year, month: month)
+ap esa_posts.body
     esa_posts.body["posts"].map do |post|
       @monthly_report.add(DailyReport.new(name: post["name"], body: post["body_md"], date: post["category"], url: post["url"]))
     end
