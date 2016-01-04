@@ -38,10 +38,12 @@ class Nippo
 
   def collect_and_upload(name: , year: , month: )
     md = collect(name: name, year: year, month: month)
-    File.open("work/#{name}_#{year}_#{month}_new.txt", "w") do |f|
+    ap md
+    # csvファイルへ
+    File.open("work/#{name}_#{year}_#{month}.csv", "w") do |f|
       f.puts md
     end
-    ap md
+# esaへuploadはしない
 #    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
   end
 
