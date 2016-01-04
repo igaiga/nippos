@@ -28,20 +28,22 @@ class Nippo
 
   def run
     year = 2015
-    month = 11
+    #month = 12 # このスクリプトでは、ここは無視されます。
     names = ['五十嵐邦明']
     names.each do |name|
-      collect_and_upload(name: name, year: year, month: month)
+      collect_and_upload(name: name, year: year)
       puts @monthly_report.url
     end
   end
 
-  def collect_and_upload(name: , year: , month: )
-    md = collect(name: name, year: year, month: month)
-    ap md
+  def collect_and_upload(name: , year:)
     # csvファイルへ
-    File.open("work/#{name}_#{year}_#{month}.csv", "w") do |f|
-      f.puts md
+    File.open("work/#{name}_#{year}.csv", "w") do |f|
+      (5..12).each do |month|
+        md = collect(name: name, year: year, month: month)
+        ap md
+        f.puts md
+      end
     end
 # esaへuploadはしない
 #    upload(name: name, body_md: md, category: category_string(year: year, month: month) + "集計/" )
