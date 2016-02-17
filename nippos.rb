@@ -33,6 +33,10 @@ class Nippo
     names.each do |name|
       collect_and_upload(name: name, year: year, month: month)
       puts @monthly_report.url
+
+      # Mac用 URLをペーストボードに貼る
+      ret = `type pbcopy 2> /dev/null`
+      `echo #{@monthly_report.url} | pbcopy` if $?.exitstatus == 0
     end
   end
 
