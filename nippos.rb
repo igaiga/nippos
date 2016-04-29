@@ -27,19 +27,26 @@ class Nippo
   # end
 
   def run
-    year = 2015
+    # year = 2015 # このスクリプトでは、ここは無視されます。
     #month = 12 # このスクリプトでは、ここは無視されます。
     names = ['五十嵐邦明']
     names.each do |name|
-      collect_and_upload(name: name, year: year)
+      collect_and_upload(name: name)
       puts @monthly_report.url
     end
   end
 
-  def collect_and_upload(name: , year:)
-    # csvファイルへ
-    File.open("work/#{name}_#{year}.csv", "w") do |f|
+  def collect_and_upload(name:)
+    # csvファイル書き出し
+    File.open("work/#{name}.csv", "w") do |f|
+      year = 2015
       (5..12).each do |month|
+        md = collect(name: name, year: year, month: month)
+        ap md
+        f.puts md
+      end
+      year = 2016
+      (1..4).each do |month|
         md = collect(name: name, year: year, month: month)
         ap md
         f.puts md

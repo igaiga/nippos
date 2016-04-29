@@ -18,5 +18,11 @@ describe "DailyReport" do
     subject { daily_report.working_times_sum }
     it { is_expected.to eq "7:20"}
   end
+
+  describe "#working_times_in_office_sum" do
+    subject { daily_report.working_times_in_office_sum }
+    it { is_expected.to eq "6:20"}
+  end
+
 end
 

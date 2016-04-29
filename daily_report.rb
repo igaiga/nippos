@@ -8,6 +8,7 @@ class DailyReport
     @name = name
     @url = url
     @daily_working_time = DailyWorkingTime.new(working_times)
+    @daily_working_time_in_office = DailyWorkingTime.new(working_times_in_office)
     self
   end
 
@@ -17,6 +18,10 @@ class DailyReport
 
   def midnight_working_times_sum
     @daily_working_time.midnight_sum
+  end
+
+  def working_times_in_office_sum
+    @daily_working_time_in_office.sum
   end
 
   private
@@ -31,11 +36,28 @@ class DailyReport
     result
   end
 
+  # オフィス勤務時間
+  def working_times_in_office
+    result = []
+    hyphen_time = HyphenTime.new
+
+    working_time_area_string.each_line do |line|
+      next unless extract_working_place(line) =~ /オフィス/
+      ht =  HyphenTime.new(extract_working_time(line))
+      result << ht if ht.valid?
+    end
+    result
+  end
+
   def working_time_area_string
     # //m は . を複数行マッチさせるモード
     "#{ @body.match(/#\s+勤務時間(.*?)#\s+/m){ |matched| matched[1] } }"
   end
 
+  def extract_working_place(string)
+    # "| オフィス | 10:00-13:00 |" の オフィス のとこ
+    string.split(/\|/)[1]
+  end
   def extract_working_time(string)
     # "| オフィス | 10:00-13:00 |" の 10:00-13:00 のとこ
     string.split(/\|/)[2]
